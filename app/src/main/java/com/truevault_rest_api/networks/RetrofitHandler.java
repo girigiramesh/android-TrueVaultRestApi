@@ -40,5 +40,9 @@ public class RetrofitHandler {
     public Call<String> updateUser(String username,String password, String attributes, boolean full){
         return trueVaultApiService.updateUser(AUTHORISATION,username,password,attributes,full);
     }
+    public Call<String> deleteUser(String user_id){
+        return trueVaultApiService.deleteUser(AUTHORISATION,user_id);
+    }
+
 
 }

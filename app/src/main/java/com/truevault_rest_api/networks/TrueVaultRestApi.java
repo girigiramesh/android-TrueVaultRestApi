@@ -1,6 +1,7 @@
 package com.truevault_rest_api.networks;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -24,4 +25,7 @@ public interface TrueVaultRestApi {
 
     @PUT("/v1/users/{user_id}")
     Call<String> updateUser(@Header("Authorization") String authorization,@Query("username") String username, @Query("password") String password, @Query("attributes") String attributes, @Query("full") boolean full);
+
+    @DELETE("/v1/users/{user_id}")
+    Call<String> deleteUser(@Header("Authorization") String authorization,@Path("user_id") String user_id);
 }

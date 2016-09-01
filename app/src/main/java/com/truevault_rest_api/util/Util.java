@@ -1,8 +1,11 @@
 package com.truevault_rest_api.util;
 
 import android.util.Base64;
+import android.util.Patterns;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Ramesh on 8/31/16.
@@ -29,5 +32,22 @@ public class Util {
             e.printStackTrace();
         }
         return text;
+    }
+    public static boolean isValidUrl(String url) {
+        Pattern p = Patterns.WEB_URL;
+        Matcher m = p.matcher(url);
+        if (m.matches())
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isValidEmail(String url) {
+        Pattern p = Patterns.EMAIL_ADDRESS;
+        Matcher m = p.matcher(url);
+        if (m.matches())
+            return true;
+        else
+            return false;
     }
 }
