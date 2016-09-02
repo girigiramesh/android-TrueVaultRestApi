@@ -50,4 +50,7 @@ public class Util {
         else
             return false;
     }
+    public static boolean isNotNullAndNotEmpty(String string) {
+        return string != null && !string.isEmpty();
+    }
 }

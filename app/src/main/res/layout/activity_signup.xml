@@ -80,6 +80,7 @@
 
         <EditText
             android:id="@+id/enter_password"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -99,6 +100,7 @@
 
         <EditText
             android:id="@+id/enter_confirm"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

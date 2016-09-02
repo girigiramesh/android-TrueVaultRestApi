@@ -29,8 +29,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
+//        setContentView(R.layout.activity_signin);
+
 //        final JSONObject userJson = new JSONObject();
 //        try {
 //            userJson.put("name", "Ramesh");
@@ -38,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-//
+
 //        RetrofitHandler.getInstance().createUser("ram12", "8982", Util.stringToBase64(userJson.toString()), true).enqueue(new Callback<String>() {
 //            @Override
 //            public void onResponse(Call<String> call, Response<String> response) {
@@ -48,8 +48,8 @@ public class BaseActivity extends AppCompatActivity {
 //                        JSONObject jsonObject = new JSONObject(response.body());
 //                        JSONObject userJsonObject = jsonObject.optJSONObject("user");
 //                         user_id = userJsonObject.optString("user_id");
-//
-//
+
+
 //                        RetrofitHandler.getInstance().readUser(user_id).enqueue(new Callback<String>() {
 //
 //                            @Override
@@ -65,8 +65,8 @@ public class BaseActivity extends AppCompatActivity {
 //                                Log.d(TAG, t.getLocalizedMessage());
 //                            }
 //                        });
-//
-//
+
+
 //                        RetrofitHandler.getInstance().updateUser("hari","1234",Util.stringToBase64(userJson.toString()),true).enqueue(new Callback<String>() {
 //                            @Override
 //                            public void onResponse(Call<String> call, Response<String> response) {
@@ -80,24 +80,24 @@ public class BaseActivity extends AppCompatActivity {
 //                                Log.d(TAG, t.getLocalizedMessage());
 //                            }
 //                        });
-//
-//
-//                        RetrofitHandler.getInstance().deleteUser(user_id).enqueue(new Callback<String>() {
-//                            @Override
-//                            public void onResponse(Call<String> call, Response<String> response) {
-//                                if (response.isSuccess()) {
-//                                    Log.d(TAG, response.body());
-//                                } else
-//                                    Log.e(TAG, response.message());
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<String> call, Throwable t) {
-//                                Log.d(TAG, t.getLocalizedMessage());
-//                            }
-//                        });
-//
-//
+
+
+                        RetrofitHandler.getInstance().deleteUser(user_id).enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if (response.isSuccess()) {
+                                    Log.d(TAG, response.body());
+                                } else
+                                    Log.e(TAG, response.message());
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Log.d(TAG, t.getLocalizedMessage());
+                            }
+                        });
+
+
 //                    } catch (JSONException e) {
 //                        e.printStackTrace();
 //                    }

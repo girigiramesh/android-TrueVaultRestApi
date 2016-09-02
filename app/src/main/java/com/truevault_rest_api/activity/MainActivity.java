@@ -20,7 +20,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
+        setContentView(R.layout.activity_main);
         //pull views
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_signup = (Button) findViewById(R.id.btn_signup);
@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // Create a new intent to open the {@link loginActivity}
-                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
 
                 // Start the new activity
                 startActivity(loginIntent);

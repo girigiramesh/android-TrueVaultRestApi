@@ -1,6 +1,8 @@
 package com.truevault_rest_api.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,8 +10,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.truevault_rest_api.R;
+import com.truevault_rest_api.constant.Constant;
+import com.truevault_rest_api.manager.SharedPreferenceManager;
 import com.truevault_rest_api.model.UserModel;
+import com.truevault_rest_api.networks.RetrofitHandler;
 import com.truevault_rest_api.util.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ramesh on 9/1/16.
@@ -34,49 +46,98 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (!isNetworkAvailable()) {
-            showToast("Check your network connection!");
+            showToast(Constant.CHECK_NETWORK);
             return;
         }
         switch (view.getId()) {
             case R.id.submit_btn:
 
                 if (enter_name.getText().toString().length() == 0) {
-                    enter_name.setError("Should not be empty!");
+                    enter_name.setError(Constant.NAME_NOTEMPTY);
                     return;
                 }
                 if (enter_gmail.getText().toString().length() == 0) {
-                    enter_gmail.setError("Should not be empty!");
+                    enter_gmail.setError(Constant.EMAIL_NOTEMPTY);
                     return;
                 }
                 if (!Util.isValidEmail(enter_gmail.getText().toString())) {
-                    enter_gmail.setError("Not valid email!");
+                    enter_gmail.setError(Constant.NOT_VALID);
                     return;
                 }
 
                 if (enter_password.getText().toString().length() == 0) {
-                    enter_password.setError("Should not be empty!");
+                    enter_password.setError(Constant.PASSWORD_NOTEMPTY);
                     return;
                 }
                 if (enter_confirm.getText().toString().length() == 0) {
-                    enter_confirm.setError("Should not be empty!");
+                    enter_confirm.setError(Constant.CPASSWORD_NOTEMPTY);
                     return;
                 }
                 if (!enter_confirm.getText().toString().equals(enter_password.getText().toString())) {
-                    showToast("Password not equal..!");
+                    showToast(Constant.NOT_EQUAL_PASS);
                     return;
                 }
 
                 if (gender_rg.getCheckedRadioButtonId() == -1) {
-                    enter_confirm.setError("Select gender!");
+                    enter_confirm.setError(Constant.GENDER);
                     return;
                 }
                 userModel = new UserModel();
                 userModel.setEmail(enter_gmail.getText().toString());
                 userModel.setPhone(enter_ph_nmbr.getText().toString());
                 userModel.setFullName(enter_name.getText().toString());
-                userModel.setGender(gender_rg.getCheckedRadioButtonId() == R.id.male_rb ? "male" : "female");
+                userModel.setGender(gender_rg.getCheckedRadioButtonId() == R.id.male_rb ? Constant.MALE : Constant.FEMALE);
 
-                showProgressDialog("Please wait..!");
+                showProgressDialog(Constant.WAIT);
+
+                RetrofitHandler.getInstance().createUser(
+                        enter_gmail.getText().toString(),
+                        enter_password.getText().toString(),
+                        userModel.toJson().toString(),
+                        true).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        dismissProgressDialog();
+                        if (response.isSuccess()) {
+
+                            SharedPreferenceManager.getInstance().putString(Constant.LOGIN_USERNAME, enter_gmail.getText().toString());
+                            SharedPreferenceManager.getInstance().putString(Constant.LOGIN_PASSWORD, enter_password.getText().toString());
+
+                            //default settings
+                            SharedPreferenceManager.getInstance().putBoolean(Constant.SETTING_LINKY_SERVICE, true);
+                            SharedPreferenceManager.getInstance().putBoolean(Constant.SETTING_DELETE_DRAFT, true);
+
+                            Log.e(TAG + " create User ", response.message());
+                            try {
+                                JSONObject responseJsonObject = new JSONObject(response.body());
+                                JSONObject userJsonObject = new JSONObject(responseJsonObject.getString("user"));
+                                SharedPreferenceManager.getInstance().putString(UserModel.USER_ID, userJsonObject.getString("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            SharedPreferenceManager.getInstance().putString(UserModel.USERNAME, enter_gmail.getText().toString());
+                            SharedPreferenceManager.getInstance().putString(UserModel.PASSWORD, enter_password.getText().toString());
+                            userModel.storeUserInSp();
+                            Intent mainIntent = new Intent(SignUpActivity.this, MainActivity.class);
+                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(mainIntent);
+                        } else {
+                            Log.e(TAG + " create User ", response.message());
+                            showToast("Error creating user..!");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        dismissProgressDialog();
+                        Log.e(TAG + " create User ", t.getLocalizedMessage());
+                        showToast("Error creating user..!");
+                    }
+                });
+                break;
+            default:
+                showToast("Error creating user..!");
+                break;
         }
     }
 

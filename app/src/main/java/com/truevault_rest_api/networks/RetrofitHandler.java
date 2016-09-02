@@ -14,6 +14,7 @@ public class RetrofitHandler {
     private static RetrofitHandler OurInstance = new RetrofitHandler();
 
     public static final String API_KEY = "a4c46d18-4165-4d8b-bb6e-686e2102831f";
+    public final static String ACCOUNT_ID = "acadee2f-d797-4edc-aada-4d934133035b";
     public static final String AUTHORISATION = "Basic " + Util.stringToBase64(API_KEY + ":").replace("\n", "");
 
     public static RetrofitHandler getInstance() {
@@ -30,6 +31,9 @@ public class RetrofitHandler {
     private RetrofitHandler() {
     }
 
+    public Call<String> loginUser(String username, String password, String accountId) {
+        return trueVaultApiService.loginUser(username, password, accountId);
+    }
     public Call<String> createUser(String username, String password, String attributes, boolean full) {
         return trueVaultApiService.createUser(AUTHORISATION, username, password, attributes, full);
     }

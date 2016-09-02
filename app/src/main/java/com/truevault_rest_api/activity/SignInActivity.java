@@ -7,13 +7,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.truevault_rest_api.R;
+import com.truevault_rest_api.constant.Constant;
+import com.truevault_rest_api.manager.SharedPreferenceManager;
 import com.truevault_rest_api.service.LoginService;
 import com.truevault_rest_api.util.Util;
 
 /**
  * Created by Ramesh on 9/1/16.
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class SignInActivity extends BaseActivity implements View.OnClickListener {
     private EditText et_email, et_password;
     private Button btn_login, btn_signup, btn_frt;
 
@@ -23,42 +25,56 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_signin);
         pullViews();
         init();
-
+        if (et_email.getText().length() == 0)
+            if (Util.isNotNullAndNotEmpty(SharedPreferenceManager.getInstance().getString(Constant.LOGIN_USERNAME, ""))) {
+                et_email.setText(SharedPreferenceManager.getInstance().getString(Constant.LOGIN_USERNAME, ""));
+            }
+        if (et_password.getText().length() == 0)
+            if (Util.isNotNullAndNotEmpty(SharedPreferenceManager.getInstance().getString(Constant.LOGIN_PASSWORD, ""))) {
+                et_password.setText(SharedPreferenceManager.getInstance().getString(Constant.LOGIN_PASSWORD, ""));
+            }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     public void onClick(View view) {
         if (!isNetworkAvailable()) {
-            showToast("Check your network connection!");
+            showToast(Constant.CHECK_NETWORK);
             return;
         }
         switch (view.getId()) {
             case R.id.btn_login:
 
                 if (et_email.getText().toString().length() == 0) {
-                    et_email.setError("Should not be empty!");
+                    et_email.setError(Constant.EMAIL_NOTEMPTY);
                     return;
                 }
 
                 if (!Util.isValidEmail(et_email.getText().toString())) {
-                    et_email.setError("Not valid email!");
+                    et_email.setError(Constant.NOT_VALID);
                     return;
                 }
                 if (et_password.getText().toString().length() == 0) {
-                    et_password.setError("Should not be empty!");
+                    et_password.setError(Constant.PASSWORD_NOTEMPTY);
                     return;
                 }
-                showProgressDialog("Please wait..!");
-                LoginService.startActionFoo(LoginActivity.this, et_email.getText().toString(), et_password.getText().toString());
+                showProgressDialog(Constant.WAIT);
+                LoginService.startActionFoo(SignInActivity.this, et_email.getText().toString(), et_password.getText().toString());
 
                 break;
             case R.id.btn_signup:
-                Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                Intent signUpIntent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(signUpIntent);
                 break;
             case R.id.et_password:
-                Intent signIntent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                Intent signIntent = new Intent(SignInActivity.this, ForgotPasswordActivity.class);
                 startActivity(signIntent);
+                break;
+            default:
+                showToast("Error creating user..!");
                 break;
         }
 
